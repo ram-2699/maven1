@@ -1,62 +1,44 @@
-@Library('mylibrary')_
-
-
 pipeline
 {
     agent any
     stages
     {
-        stage('Download_Master')
+        stage ('down')
         {
             steps
             {
-                script
-                {
-                    cicd.gitDownload("maven")
-                }
+            git 'https://github.com/IntelliqDevops/maven.git'    
             }
         }
-        stage('Build_Master')
+        stage ('build')
         {
             steps
             {
-                script
-                {
-                    cicd.buildArtifact()
-                }
+                sh 'mvn package'
             }
         }
-        stage('Deployment_Master')
+        stage('deploy')
         {
             steps
             {
-                script
-                {
-                    cicd.deployTomcat("DeclarativePipelinewithSharedLibraries","172.31.31.19","myapp")
-                }
+            deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: '8f15884a-6b4c-48e1-b5f5-a4a86b7328d1', path: '', url: 'http://172.31.15.223:8080')], contextPath: 'tee', war: '**/*.war'
             }
         }
-        stage('Testing_Master')
+        stage('test')
         {
             steps
             {
-                script
-                {
-                    cicd.gitDownload("FunctionalTesting")
-                    cicd.executeSelenium("DeclarativePipelinewithSharedLibraries")
-                }
+                 git 'https://github.com/IntelliqDevops/FunctionalTesting.git'
+                 sh 'java -jar /var/lib/jenkins/workspace/slow/testing.jar'
             }
         }
-        stage('Delivery_Master')
+        stage ('delivery')
         {
             steps
             {
-                script
-                {
-                    cicd.deployTomcat("DeclarativePipelinewithSharedLibraries","172.31.25.180","myprodapp")
-                }
+                deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: '8f15884a-6b4c-48e1-b5f5-a4a86b7328d1', path: '', url: 'http://172.31.14.144:8080')], contextPath: 'pee', war: '**/*.war'
             }
         }
     }
+    
 }
-
