@@ -21,7 +21,7 @@ pipeline
         {
             steps
             {
-            deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: '8f15884a-6b4c-48e1-b5f5-a4a86b7328d1', path: '', url: 'http://172.31.15.223:8080')], contextPath: 'tee', war: '**/*.war'
+            deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: '2d515b98-d9f3-4b20-baa0-986954636511', path: '', url: 'http://172.31.2.5:8080')], contextPath: 't', war: '**/*.war'
             }
         }
         stage('test')
@@ -29,14 +29,14 @@ pipeline
             steps
             {
                  git 'https://github.com/IntelliqDevops/FunctionalTesting.git'
-                 sh 'java -jar /var/lib/jenkins/workspace/slow/testing.jar'
+                 sh 'java -jar /var/lib/jenkins/workspace/Development/testing.jar'
             }
         }
         stage ('delivery')
         {
             steps
             {
-                deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: '8f15884a-6b4c-48e1-b5f5-a4a86b7328d1', path: '', url: 'http://172.31.14.144:8080')], contextPath: 'pee', war: '**/*.war'
+                deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: '2d515b98-d9f3-4b20-baa0-986954636511', path: '', url: 'http://172.31.11.78:8080')], contextPath: 'p', war: '**/*.war'
             }
         }
     }
